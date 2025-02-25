@@ -2,12 +2,11 @@
 
 ## Introduction
 
-This framework is for CSC 581 students to develop intelligent agents supporting the AI4S&R project. Students can create specialized agents for various SAR roles such as those listed in this spreadsheet:
+The First Aid Agent helps with providing first aid guidance and assessing medical triage levels. It can also combine a first aid query with a given triage level assessed and give a combined output. The agent has access to two data sources:
+1. A json file consisting of possible first aid questions and their answers which are answered using fuzzy matching using difflib
+2. A csv file consisting of patient info and assessed triage levels 
 
-https://docs.google.com/spreadsheets/d/1QZK5HAdDC-_XNui6S0JZTbJH5_PbYJTp8_gyhXmz8Ek/edit?usp=sharing
-https://docs.google.com/spreadsheets/d/11rBV9CbKNeQbWbaks8TF6GO7WcSUDS_-hAoH75UEkgQ/edit?usp=sharing
-
-Each student or team will choose a specific role within the SAR ecosystem and implement an agent that provides decision support and automation for that role.
+The agent uses OpenAI's API key to access the LLM to assess a triage level and provide a combined answer. 
 
 ## How to Submit
 Please submit a link to your clone of the repository to Canvas. 
