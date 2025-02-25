@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The First Aid Agent helps with providing first aid guidance and assessing medical triage levels. It can also combine a first aid query with a given triage level assessed and give a combined output. The agent has access to two data sources:
+The First Aid Agent helps with providing first aid guidance and assessing medical triage levels. It can also combine a first aid query with a given triage level assessed and give a combined output. The agent has access to two data sources (in the knowledge directory):
 1. A json file consisting of possible first aid questions and their answers which are answered using fuzzy matching using difflib
 2. A csv file consisting of patient info and assessed triage levels 
 
