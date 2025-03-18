@@ -15,6 +15,7 @@ class TestFirstAidAgent:
         return FirstAidAgent(first_aid_path, triage_path)  # Fixed class name
 
     def test_first_aid_guidance(self, agent):
+        # Basic check that the response is non-empty and mentions the condition
         guidance = agent.provide_first_aid_guidance("How do you treat a sprain?")
         assert "sprain" in guidance.lower() or "treat" in guidance.lower()
 
@@ -31,8 +32,9 @@ class TestFirstAidAgent:
         expected_colors = ["red", "yellow", "green", "black", "white"]
         
         assert isinstance(triage_response, str) and len(triage_response) > 0
+        # Check that one of the expected colors is mentioned in the response along with an explanation.
         assert any(color in triage_response.lower() for color in expected_colors)
-        assert ":" in triage_response  # Ensure explanation is included
+        assert ":" in triage_response  # Ensure explanation is included, expecting a colon between the color and its explanation.
 
     def test_generate_summary(self, agent):
         summary = agent.generate_triage_summary()
@@ -40,9 +42,26 @@ class TestFirstAidAgent:
         assert all(key.lower() in expected_keys for key in summary.keys())
 
     def test_answer_combined_question(self, agent):
+        # Check that summary keys are within the set of expected triage categories
         combined_query = "What is the recommended first aid for deep cuts for middle-aged women with low blood pressure?"
         triage_info = "Yellow: Serious injuries needing immediate attention."
         answer = agent.answer_combined_question(combined_query, triage_info)
         
         assert isinstance(answer, str) and len(answer) > 0
+
+    def test_load_first_aid_knowledge_file_not_found(self, monkeypatch):
+        # Test handling when the first aid JSON file is missing.
+        fake_first_aid_path = "non_existent_file.json"
+        fake_csv_path = "non_existent_file.csv"
+        agent = FirstAidAgent(fake_first_aid_path, fake_csv_path)
+        knowledge = agent.load_first_aid_knowledge()
+        assert knowledge == []
+
+    def test_load_triage_data_file_not_found(self, monkeypatch):
+        # Test handling when the triage CSV file is missing.
+        fake_first_aid_path = "non_existent_file.json"
+        fake_csv_path = "non_existent_file.csv"
+        agent = FirstAidAgent(fake_first_aid_path, fake_csv_path)
+        df = agent.load_triage_data()
+        assert df.empty
 
