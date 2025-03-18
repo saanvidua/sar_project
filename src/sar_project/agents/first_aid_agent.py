@@ -7,6 +7,10 @@ from openai.types import Completion, CompletionChoice, CompletionUsage
 from sar_project.agents.base_agent import SARBaseAgent
 import difflib
 
+# Configure basic logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 class FirstAidAgent(SARBaseAgent):
     def __init__(self, first_aid_path, triage_path):
         """
@@ -18,7 +22,7 @@ class FirstAidAgent(SARBaseAgent):
             role="First Aid Guidance Agent",
             system_message="You are a search and rescue medical assistant specialized in providing first aid guidance and medical triage advice."
         )
-
+        # Instantiate the OpenAI client
         self.client = openai.OpenAI(
             api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
         )
@@ -32,18 +36,20 @@ class FirstAidAgent(SARBaseAgent):
         try:
             with open(self.first_aid_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
+                logger.info("First aid knowledge loaded successfully.")
             return data.get("intents", [])
         except Exception as e:
-            print(f"Error loading first aid knowledge: {e}")
+            logger.error(f"Error loading first aid knowledge: {e}")
             return []
 
 
     def load_triage_data(self):
         """Load the triage data from a CSV file into a DataFrame."""
         try:
+            logger.info("Triage CSV loaded successfully.")
             return pd.read_csv(self.triage_path)
         except Exception as e:
-            print(f"Error loading triage data: {e}")
+            logger.error(f"Error loading triage data: {e}")
             return pd.DataFrame()
 
     def provide_first_aid_guidance(self, query):
@@ -91,14 +97,15 @@ class FirstAidAgent(SARBaseAgent):
             return assigned_triage
 
         except Exception as e:
-            print(f"Error assigning triage via LLM: {e}")
-            return None  # Return None if an error occurs
+            logger.error(f"Error assigning triage via LLM: {e}")
+            return "Unable to assign triage at this time due to an API error."
 
     def generate_triage_summary(self):
         """
         Generate a summary of the triage levels from the CSV data.
         """
         if "triage" not in self.df_triage.columns:
+            logger.warning("CSV does not contain a 'triage' column.")
             return {}
         summary = self.df_triage["triage"].value_counts().to_dict()
         return summary
@@ -119,7 +126,7 @@ class FirstAidAgent(SARBaseAgent):
             return combined_answer
 
         except Exception as e:
-            print(f"Error generating combined answer: {e}")
+            logger.error(f"Error generating combined answer: {e}")
             return "Unable to generate a combined response."
 
 # Example usage (for development/testing):
