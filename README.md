@@ -11,15 +11,20 @@ The agent uses OpenAI's API key to access the LLM to assess a triage level and p
 
 After reviewing the feedback given, I learned that there are several areas for improvement, most of them relating to inline documentation, logging, and error handling. 
 The feedback highlighted that while the core functionality was present and functional, the error handling around external API (OpenAI) calls was minimal. Given this, I learned that I should handle API-related or network-related errors more gracefully so the user understands the status of the system instead of being confused about any time-outs. I also recognized the need to provide meaningful fallback behaviors when input data (from the CSV and JSON files) is incomplete.
+
 The feedback also pointed out certain edge cases I could cover in my test, such as no matching intent found or any missing CSV fields, which would be helpful for me as the developer to know if something goes wrong.
+
 Additionally, while my test cases cover basic functionality, the feedback suggested that I could expand the coverage by mocking the OpenAI API responses in tests to avoid depending on the API again while testing, which is a great idea since it reduces the usage of API calls numerous times and saves money for me. 
 
 ## Modifications
 
 Based on the feedback, I did the following:
 Added more inline documentation. This could be useful if I or anyone else continues the project in the future and also allows for easy understanding of the code’s functionality. 
+
 Added logging for core functionalities as well as to catch any errors
+
 Updated return statements for errors
+
 Added more test coverage and handled cases where files aren’t found
 
 
